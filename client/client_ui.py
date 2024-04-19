@@ -60,7 +60,7 @@ class Ui_Chatroom(object):
         self.loginButton1 = QtWidgets.QPushButton(Chatroom)
         self.loginButton1.setObjectName("pushButton_2")
         self.loginButton1.setText("Disconnect")
-        self.loginButton1.clicked.connect(self.disconnect)
+        self.loginButton1.clicked.connect(lambda: self.disconnect(Chatroom))
 
         self.verticalLayout.addWidget(self.loginButton1)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -90,11 +90,13 @@ class Ui_Chatroom(object):
         Chatroom.show()
         QtCore.QMetaObject.connectSlotsByName(Chatroom)
 
-    def disconnect(self):
+    def disconnect(self, chatroom):
         print("Disconnected!")
+        chatroom.close()
         
     def send(self):
         print("Message sent!")
+        
         
        
        
