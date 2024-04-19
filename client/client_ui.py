@@ -1,31 +1,41 @@
-from PyQt5 import QtCore, QtGui, QtWidgets 
+from PyQt5 import QtCore, QtWidgets 
 import sys
 
 class Ui_Chatroom(object):
-    def loginUI(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(573, 99)
-        horizontalLayout = QtWidgets.QHBoxLayout(Form)
+    def __init__(self):
+        self.app = QtWidgets.QApplication(sys.argv)
+        self.win = QtWidgets.QWidget()
+
+        self.loginUI(self.win)
+
+        self.win.show()
+        sys.exit(self.app.exec_())
+    
+    def loginUI(self, loginWindow):
+        self.loginWindow = loginWindow
+        self.loginWindow.setObjectName("Form")
+        self.loginWindow.resize(573, 99)
+        horizontalLayout = QtWidgets.QHBoxLayout(self.loginWindow)
         horizontalLayout.setObjectName("horizontalLayout")
         verticalLayout = QtWidgets.QVBoxLayout()
         verticalLayout.setObjectName("verticalLayout")
         
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         verticalLayout.addItem(spacerItem)
-        lineEdit = QtWidgets.QLineEdit(Form)
-        lineEdit.setObjectName("lineEdit")
-        verticalLayout.addWidget(lineEdit)
+        usernameLine = QtWidgets.QLineEdit(self.loginWindow)
+        usernameLine.setObjectName("lineEdit")
+        verticalLayout.addWidget(usernameLine)
         
         horizontalLayout_2 = QtWidgets.QHBoxLayout()
         horizontalLayout_2.setObjectName("horizontalLayout_2")
         
-        self.loginButton1 = QtWidgets.QPushButton(Form)
+        self.loginButton1 = QtWidgets.QPushButton(self.loginWindow)
         self.loginButton1.setObjectName("pushButton_2")
         self.loginButton1.setText("Login")
-        self.loginButton1.clicked.connect(lambda: self.openChatUI(Form))
+        self.loginButton1.clicked.connect(lambda: self.openChatUI())
         horizontalLayout_2.addWidget(self.loginButton1)
         
-        self.loginButton2 = QtWidgets.QPushButton(Form)
+        self.loginButton2 = QtWidgets.QPushButton(self.loginWindow)
         self.loginButton2.setObjectName("pushButton")
         self.loginButton2.setText("Randomize")
         horizontalLayout_2.addWidget(self.loginButton2)
@@ -35,81 +45,84 @@ class Ui_Chatroom(object):
         verticalLayout.addItem(spacerItem1)
         horizontalLayout.addLayout(verticalLayout)
 
-        Form.show()
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.loginWindow.show()
+        QtCore.QMetaObject.connectSlotsByName(self.loginWindow)
         
-    def openChatUI(self, loginWindow): 
+    def openChatUI(self): 
         self.chatWindow = QtWidgets.QWidget()  # Create the chat window
-        self.chatUi(self.chatWindow)  
+        self.chatUi() 
+         
         self.chatWindow.show()
-        loginWindow.hide() 
+        self.loginWindow.hide() 
     
-    def chatUi(self, Chatroom):
-        Chatroom.setObjectName("Chatroom")
-        Chatroom.resize(908, 473)
+    def chatUi(self):
+        self.chatWindow.setObjectName("Chatroom")
+        self.chatWindow.resize(908, 473)
 
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(Chatroom)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        horizontalLayout_4 = QtWidgets.QHBoxLayout(self.chatWindow)
+        horizontalLayout_4.setObjectName("horizontalLayout_4")
 
-        self.gridLayout = QtWidgets.QGridLayout()
-        self.gridLayout.setObjectName("gridLayout")
+        gridLayout = QtWidgets.QGridLayout()
+        gridLayout.setObjectName("gridLayout")
 
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
+        verticalLayout = QtWidgets.QVBoxLayout()
+        verticalLayout.setObjectName("verticalLayout")
 
-        self.loginButton1 = QtWidgets.QPushButton(Chatroom)
-        self.loginButton1.setObjectName("pushButton_2")
-        self.loginButton1.setText("Disconnect")
-        self.loginButton1.clicked.connect(lambda: self.disconnect(Chatroom))
+        self.disconnectButton = QtWidgets.QPushButton(self.chatWindow)
+        self.disconnectButton.setObjectName("pushButton_2")
+        self.disconnectButton.setText("Disconnect")
+        self.disconnectButton.clicked.connect(lambda: self.disconnect())
 
-        self.verticalLayout.addWidget(self.loginButton1)
+        verticalLayout.addWidget(self.disconnectButton)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem)
-        self.gridLayout.addLayout(self.verticalLayout, 0, 1, 1, 1)
+        verticalLayout.addItem(spacerItem)
+        gridLayout.addLayout(verticalLayout, 0, 1, 1, 1)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem1, 1, 0, 1, 1)
+        gridLayout.addItem(spacerItem1, 1, 0, 1, 1)
 
-        self.loginButton2 = QtWidgets.QPushButton(Chatroom)
-        self.loginButton2.setToolTip("")
-        self.loginButton2.setToolTipDuration(-1)
-        self.loginButton2.setObjectName("pushButton")
-        self.loginButton2.setText("Send")
-        self.loginButton2.clicked.connect(self.send)
-        self.gridLayout.addWidget(self.loginButton2, 2, 1, 1, 1)
-
-        self.lineEdit = QtWidgets.QLineEdit(Chatroom)
+        self.lineEdit = QtWidgets.QLineEdit(self.chatWindow)
         self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 2, 0, 1, 1)
+        
+        gridLayout.addWidget(self.lineEdit, 2, 0, 1, 1)
+        
+        self.sendButton = QtWidgets.QPushButton(self.chatWindow)
+        self.sendButton.setToolTip("")
+        self.sendButton.setToolTipDuration(-1)
+        self.sendButton.setObjectName("pushButton")
+        self.sendButton.setText("Send")
+        
+        # self.sendButton.clicked.connect(lambda: self.send(self.lineEdit.text()))
+        
+        gridLayout.addWidget(self.sendButton, 2, 1, 1, 1)
 
-        self.textBrowser = QtWidgets.QTextBrowser(Chatroom)
+
+        self.textBrowser = QtWidgets.QTextBrowser(self.chatWindow)
         self.textBrowser.setObjectName("textBrowser")
-        self.gridLayout.addWidget(self.textBrowser, 0, 0, 1, 1)
-        self.horizontalLayout_4.addLayout(self.gridLayout)
+        gridLayout.addWidget(self.textBrowser, 0, 0, 1, 1)
+        horizontalLayout_4.addLayout(gridLayout)
 
 
-        Chatroom.show()
-        QtCore.QMetaObject.connectSlotsByName(Chatroom)
+        self.chatWindow.show()
+        QtCore.QMetaObject.connectSlotsByName(self.chatWindow)
 
-    def disconnect(self, chatroom):
-        print("Disconnected!")
-        chatroom.close()
+    def disconnect(self):
+        self.chatWindow.close()
+        self.loginWindow.show()
         
-    def send(self):
-        print("Message sent!")
+    # def send(self, message):
+    #     print(message)
         
         
        
-       
-       
-app = QtWidgets.QApplication(sys.argv)
-win = QtWidgets.QWidget()
+# app = QtWidgets.QApplication(sys.argv)
+# win = QtWidgets.QWidget()
 
-ui = Ui_Chatroom()
-# ui.chatUi(win)
-ui.loginUI(win)
+# ui = Ui_Chatroom()
+# # ui.chatUi(win)
+# ui.loginUI(win)
 
-win.show()
-sys.exit(app.exec_())
+# win.show()
+# sys.exit(app.exec_())
 
 
 
