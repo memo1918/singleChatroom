@@ -14,25 +14,35 @@ class Ui_Chatroom(object):
         verticalLayout.addItem(spacerItem)
         lineEdit = QtWidgets.QLineEdit(Form)
         lineEdit.setObjectName("lineEdit")
-        verticalLayout.addWidget(self.lineEdit)
+        verticalLayout.addWidget(lineEdit)
         
         horizontalLayout_2 = QtWidgets.QHBoxLayout()
         horizontalLayout_2.setObjectName("horizontalLayout_2")
         
         self.loginButton1 = QtWidgets.QPushButton(Form)
         self.loginButton1.setObjectName("pushButton_2")
+        self.loginButton1.setText("Login")
+        self.loginButton1.clicked.connect(lambda: self.openChatUI(Form))
         horizontalLayout_2.addWidget(self.loginButton1)
         
         self.loginButton2 = QtWidgets.QPushButton(Form)
         self.loginButton2.setObjectName("pushButton")
+        self.loginButton2.setText("Randomize")
         horizontalLayout_2.addWidget(self.loginButton2)
-        verticalLayout.addLayout(self.horizontalLayout_2)
+        verticalLayout.addLayout(horizontalLayout_2)
         
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         verticalLayout.addItem(spacerItem1)
-        horizontalLayout.addLayout(self.verticalLayout)
+        horizontalLayout.addLayout(verticalLayout)
 
+        Form.show()
         QtCore.QMetaObject.connectSlotsByName(Form)
+        
+    def openChatUI(self, loginWindow): 
+        self.chatWindow = QtWidgets.QWidget()  # Create the chat window
+        self.chatUi(self.chatWindow)  
+        self.chatWindow.show()
+        loginWindow.hide() 
     
     def chatUi(self, Chatroom):
         Chatroom.setObjectName("Chatroom")
@@ -93,7 +103,9 @@ app = QtWidgets.QApplication(sys.argv)
 win = QtWidgets.QWidget()
 
 ui = Ui_Chatroom()
-ui.chatUi(win)
+# ui.chatUi(win)
+ui.loginUI(win)
+
 win.show()
 sys.exit(app.exec_())
 
