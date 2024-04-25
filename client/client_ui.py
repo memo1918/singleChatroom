@@ -1,8 +1,14 @@
 from PyQt5 import QtCore, QtWidgets 
 import sys
+import random
 
 class Ui_Chatroom(object):
     def __init__(self):
+
+        self.colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Black", ]
+        self.animals = ["Dog", "Cat", "Lion", "Tiger", "Elephant", "Monkey"]
+
+        
         self.app = QtWidgets.QApplication(sys.argv)
         self.win = QtWidgets.QWidget()
 
@@ -22,9 +28,9 @@ class Ui_Chatroom(object):
         
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         verticalLayout.addItem(spacerItem)
-        usernameLine = QtWidgets.QLineEdit(self.loginWindow)
-        usernameLine.setObjectName("lineEdit")
-        verticalLayout.addWidget(usernameLine)
+        self.usernameLine = QtWidgets.QLineEdit(self.loginWindow)
+        self.usernameLine.setObjectName("lineEdit")
+        verticalLayout.addWidget(self.usernameLine)
         
         horizontalLayout_2 = QtWidgets.QHBoxLayout()
         horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -38,6 +44,7 @@ class Ui_Chatroom(object):
         self.loginButton2 = QtWidgets.QPushButton(self.loginWindow)
         self.loginButton2.setObjectName("pushButton")
         self.loginButton2.setText("Randomize")
+        self.loginButton2.clicked.connect(lambda: self.randomizer())
         horizontalLayout_2.addWidget(self.loginButton2)
         verticalLayout.addLayout(horizontalLayout_2)
         
@@ -49,11 +56,33 @@ class Ui_Chatroom(object):
         QtCore.QMetaObject.connectSlotsByName(self.loginWindow)
         
     def openChatUI(self): 
+        username = self.usernameLine.text()
+        if len(username) < 6:
+            self.usernameLine.clear()
+            self.usernameLine.setPlaceholderText("Please enter at least 6 characters")
+            return
+
         self.chatWindow = QtWidgets.QWidget()  # Create the chat window
         self.chatUi() 
+    
+        
          
         self.chatWindow.show()
         self.loginWindow.hide() 
+    
+    def randomizer(self):
+        random_color = random.choice(self.colors)
+        random_animal = random.choice(self.animals)
+
+        random_number = random.randint(0, 999)
+
+        numba = str(random_number).zfill(3)
+
+        # Concatenate the random parts to form the username
+        ranus = f"{random_color}{random_animal}{numba}"
+        self.usernameLine.setText(ranus)
+
+
     
     def chatUi(self):
         self.chatWindow.setObjectName("Chatroom")
