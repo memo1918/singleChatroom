@@ -1,17 +1,21 @@
 from PyQt5 import QtCore, QtWidgets 
 import socketio
 from client_ui import Ui_Chatroom
+import sys
 
 
 class Tunnel:
     global sio
-    sio = socketio.Client()     
-    
+    sio = socketio.Client()  
     def __init__(self):
+        self.isconnected = False
+    
+    def startConnect(self):
         try:
             sio.connect('http://127.0.0.1:8000/ ')
         except:
             print("Connection Error")
+        self.isconnected = True
                            
     @sio.event
     def connect():
@@ -29,13 +33,13 @@ class Tunnel:
         sio.emit('chat_message', message)
 
 
+
 if __name__ == "__main__": 
-    tunel = Tunnel()
-    ui = Ui_Chatroom()
-    ui.sendButton.clicked.connect(lambda: tunel.send(ui.lineEdit.text()))
+    tunnel = Tunnel()
+    ui = Ui_Chatroom(tunnel)
     
-    
-    
-    
+   
+   
+   
 # # Keep the client running (optional)
 # # sio.wait() 

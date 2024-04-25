@@ -3,19 +3,32 @@ import sys
 import random
 
 class Ui_Chatroom(object):
-    def __init__(self):
+    def __init__(self, tunnel ,app=-1,win=-1,exec=True):
 
         self.colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Black", ]
         self.animals = ["Dog", "Cat", "Lion", "Tiger", "Elephant", "Monkey"]
 
         
-        self.app = QtWidgets.QApplication(sys.argv)
-        self.win = QtWidgets.QWidget()
+        self.sendButton = None 
+        self.lineEdit = None   
+        self.tunnel = tunnel
+        
+        if app == -1:
+            self.app = QtWidgets.QApplication(sys.argv)
+        else:
+            self.app = app
+        
+        if win == -1:
+            self.win = QtWidgets.QWidget()
+        else:
+            self.win = win
 
-        self.loginUI(self.win)
+        if exec:
+            self.loginUI(self.win)
 
-        self.win.show()
-        sys.exit(self.app.exec_())
+            self.win.show()
+            sys.exit(self.app.exec_())
+            
     
     def loginUI(self, loginWindow):
         self.loginWindow = loginWindow
@@ -39,6 +52,8 @@ class Ui_Chatroom(object):
         self.loginButton1.setObjectName("pushButton_2")
         self.loginButton1.setText("Login")
         self.loginButton1.clicked.connect(lambda: self.openChatUI())
+        self.loginButton1.clicked.connect(lambda: self.tunnel.startConnect())  # Connect loginButton1 to startConnect function
+
         horizontalLayout_2.addWidget(self.loginButton1)
         
         self.loginButton2 = QtWidgets.QPushButton(self.loginWindow)
@@ -64,9 +79,8 @@ class Ui_Chatroom(object):
 
         self.chatWindow = QtWidgets.QWidget()  # Create the chat window
         self.chatUi() 
-    
         
-         
+        self.sendButton.clicked.connect(lambda: self.tunnel.send(self.lineEdit.text()))  # Connect sendButton to send function
         self.chatWindow.show()
         self.loginWindow.hide() 
     
