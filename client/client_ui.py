@@ -1,6 +1,8 @@
-from PyQt5 import QtCore, QtWidgets 
+from PyQt5 import QtCore, QtWidgets
 import sys
 import random
+from datetime import datetime
+
 
 class Ui_Chatroom(object):
     def __init__(self, tunnel ,app=-1,win=-1,exec=True):
@@ -29,7 +31,6 @@ class Ui_Chatroom(object):
             self.win.show()
             sys.exit(self.app.exec_())
             
-    
     def loginUI(self, loginWindow):
         self.loginWindow = loginWindow
         self.loginWindow.setObjectName("Form")
@@ -52,7 +53,6 @@ class Ui_Chatroom(object):
         self.loginButton1.setObjectName("pushButton_2")
         self.loginButton1.setText("Login")
         self.loginButton1.clicked.connect(lambda: self.openChatUI())
-        self.loginButton1.clicked.connect(lambda: self.tunnel.startConnect())  # Connect loginButton1 to startConnect function
 
         horizontalLayout_2.addWidget(self.loginButton1)
         
@@ -71,15 +71,15 @@ class Ui_Chatroom(object):
         QtCore.QMetaObject.connectSlotsByName(self.loginWindow)
         
     def openChatUI(self): 
-        username = self.usernameLine.text()
-        if len(username) < 6:
+        self.username = self.usernameLine.text()
+        if len(self.username) < 6:
             self.usernameLine.clear()
             self.usernameLine.setPlaceholderText("Please enter at least 6 characters")
             return
 
+        self.tunnel.startConnect(self.username)
         self.chatWindow = QtWidgets.QWidget()  # Create the chat window
         self.chatUi() 
-        
         self.sendButton.clicked.connect(lambda: self.tunnel.send(self.lineEdit.text()))  # Connect sendButton to send function
         self.chatWindow.show()
         self.loginWindow.hide() 
@@ -95,9 +95,7 @@ class Ui_Chatroom(object):
         # Concatenate the random parts to form the username
         ranus = f"{random_color}{random_animal}{numba}"
         self.usernameLine.setText(ranus)
-
-
-    
+   
     def chatUi(self):
         self.chatWindow.setObjectName("Chatroom")
         self.chatWindow.resize(908, 473)
@@ -151,11 +149,17 @@ class Ui_Chatroom(object):
     def disconnect(self):
         self.chatWindow.close()
         self.loginWindow.show()
+        self.tunnel.disconnect()
         
-    # def send(self, message):
-    #     print(message)
+    def receive(self, data):
+        c = datetime.now()
+        current_time = c.strftime('%H:%M:%S')
+        stamp = f"{current_time}:{data[0]}:"
+        self.textBrowser.append(f"<p style='color:{data[2]}'>{stamp} <span style='color:black'> {data[1]} </span> </p>")
+        # self.textBrowser.moveCursor(QtGui.QTextCursor.End)
         
-        
+    
+    
        
 # app = QtWidgets.QApplication(sys.argv)
 # win = QtWidgets.QWidget()

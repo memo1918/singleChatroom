@@ -1,10 +1,18 @@
 from fastapi import FastAPI
 from socketio import AsyncServer, ASGIApp
+import random
 
+
+class User():
+    def __init__(self,username,sid):
+        self.username = username
+        self.sid = sid
+        self.color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
+users = {str:User} #{sid:User}
 
 app = FastAPI()
 # to run the server -> uvicorn main:app --reload
-
 # Create Socket.IO server
 sio = AsyncServer(cors_allowed_origins='*',async_mode='asgi')
 socketio_app = ASGIApp(sio)
@@ -17,16 +25,18 @@ async def root():
 
 @sio.on("connect")
 async def connect(sid, env):
-    print("New Client Connected to This id :"+" "+str(sid))
+    print("Client Connected: "+" "+str(sid))
+    users[sid] = User(env['HTTP_USERNAME'],str(sid))
     
 @sio.on("disconnect")
 async def disconnect(sid):
     print("Client Disconnected: "+" "+str(sid))
+    users.pop(str(sid))
     
 @sio.on("chat_message")
 async def chat_message(sid, data):
-    print("Message from client:", data)
-    await sio.emit('chat_message', data) 
+    print("Message from client:", users[sid].username ," message:", data)
+    await sio.emit('chat_message', [users[sid].username, data, users[sid].color] ) 
 
 if __name__ == "__main__":
     import uvicorn
