@@ -39,9 +39,8 @@ async def chat_message(sid, data):
     print("Message from client:", users[sid].username ," message:", data)
     c = datetime.now()
     current_time = c.strftime('%H:%M:%S')
-    stamp = f"{current_time}:{data[0]}:"
-    await sio.emit('chat_message', [users[sid].username, data, users[sid].color,stamp] ) 
 
+    await sio.emit('chat_message', [users[sid].username, data, users[sid].color,current_time] ) 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000)
