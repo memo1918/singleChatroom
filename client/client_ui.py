@@ -132,6 +132,7 @@ class Ui_Chatroom(object):
         self.sendButton.setObjectName("pushButton")
         self.sendButton.setText("Send")
         
+        self.lineEdit.returnPressed.connect(lambda: self.sendButton.click())
         # self.sendButton.clicked.connect(lambda: self.send(self.lineEdit.text()))
         
         gridLayout.addWidget(self.sendButton, 2, 1, 1, 1)
