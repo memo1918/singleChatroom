@@ -7,8 +7,8 @@ from datetime import datetime
 class Ui_Chatroom(object):
     def __init__(self, tunnel ,app=-1,win=-1,exec=True):
 
-        self.colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Black", ]
-        self.animals = ["Dog", "Cat", "Lion", "Tiger", "Elephant", "Monkey"]
+        self.colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Black", "White", "Brown", "Gold", "Silver", "Gray"]
+        self.animals = ["Dog", "Cat", "Lion", "Tiger", "Elephant", "Monkey", "Bear", "Falcon", "Hawk", "Chicken", "Cheetah", "GOAT", "Shark"]
 
         
         self.sendButton = None 
