@@ -155,7 +155,7 @@ class Ui_Chatroom(object):
         c = datetime.now()
         current_time = c.strftime('%H:%M:%S')
         stamp = f"{current_time}:{data[0]}:"
-        self.textBrowser.append(f"<p style='color:{data[2]}'>{stamp} <span style='color:black'> {data[1]} </span> </p>")
+        self.textBrowser.append(f"<p style='color:{data[2]}'>{data[3]} <span style='color:black'> {data[1]} </span> </p>")
         # self.textBrowser.moveCursor(QtGui.QTextCursor.End)
         
     

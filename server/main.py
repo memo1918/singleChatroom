@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from socketio import AsyncServer, ASGIApp
 import random
+from datetime import datetime
 
 
 class User():
@@ -36,7 +37,10 @@ async def disconnect(sid):
 @sio.on("chat_message")
 async def chat_message(sid, data):
     print("Message from client:", users[sid].username ," message:", data)
-    await sio.emit('chat_message', [users[sid].username, data, users[sid].color] ) 
+    c = datetime.now()
+    current_time = c.strftime('%H:%M:%S')
+    stamp = f"{current_time}:{data[0]}:"
+    await sio.emit('chat_message', [users[sid].username, data, users[sid].color,stamp] ) 
 
 if __name__ == "__main__":
     import uvicorn
