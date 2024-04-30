@@ -44,7 +44,12 @@ class Tunnel:
     @staticmethod
     def on_chat_message(instance,data):
         instance.ui.receive(data)
-
+        
+    @staticmethod
+    def on_getChat_history(instance):
+        data = instance.ui.textBrowser.toHtml()
+        # print(data)
+        sio.emit('chat_history',data)
 
 if __name__ == "__main__": 
     app = QtWidgets.QApplication(sys.argv)
@@ -57,6 +62,7 @@ if __name__ == "__main__":
     sio.on('connect', lambda: Tunnel.on_connect(tunnel))
     sio.on('disconnect', lambda: Tunnel.on_disconnect(tunnel))
     sio.on('chat_message', lambda data: Tunnel.on_chat_message(tunnel,data))
+    sio.on('getChat_history', lambda: Tunnel.on_getChat_history(tunnel))
 
     ui.loginUI(win)
     win.show()

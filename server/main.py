@@ -10,7 +10,8 @@ class User():
         self.sid = sid
         self.color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
-users = {str:User} #{sid:User}
+
+users: dict[str:User] = {} #{sid:User}
 
 app = FastAPI()
 # to run the server -> uvicorn main:app --reload
@@ -22,25 +23,37 @@ app.mount("/socket.io/", socketio_app)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "server running"}
 
 @sio.on("connect")
 async def connect(sid, env):
-    print("Client Connected: "+" "+str(sid))
+    print("Client Connected: "+ str(sid))
     users[sid] = User(env['HTTP_USERNAME'],str(sid))
+    if len(users) > 1:
+        await sio.emit('getChat_history', to=str(next(iter(users)))) #str(next(iter(users))) -> sid
+        # sio.on('chat_history', lambda data: chat_history(sid,data))
+    
     
 @sio.on("disconnect")
 async def disconnect(sid):
-    print("Client Disconnected: "+" "+str(sid))
+    print("Client Disconnected: "+str(sid))
     users.pop(str(sid))
     
 @sio.on("chat_message")
 async def chat_message(sid, data):
-    print("Message from client:", users[sid].username ," message:", data)
+    # print("Message from client:", users[sid].username ," message:", data)
     c = datetime.now()
     current_time = c.strftime('%H:%M:%S')
 
     await sio.emit('chat_message', [users[sid].username, data, users[sid].color,current_time] ) 
+    
+@sio.on("chat_history")
+def chat_history(sid,data):
+    sio.emit('getChat_history',data,to=sid)
+
+    
+    
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000)
+
