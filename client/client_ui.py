@@ -131,6 +131,7 @@ class Ui_Chatroom(object):
         self.sendButton.setToolTipDuration(-1)
         self.sendButton.setObjectName("pushButton")
         self.sendButton.setText("Send")
+
         
         self.lineEdit.returnPressed.connect(lambda: self.sendButton.click())
         # self.sendButton.clicked.connect(lambda: self.send(self.lineEdit.text()))

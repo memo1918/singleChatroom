@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtWidgets
 import socketio
 from client_ui import Ui_Chatroom
 import sys
+from profanityfilter import ProfanityFilter
 
 sio = socketio.Client()  
 
@@ -10,6 +11,7 @@ class Tunnel:
     def __init__(self):
         self.isconnected = False
         self.ui=None
+        self.profanityfilter = ProfanityFilter()
     
     def startConnect(self,username):
         if self.isconnected:
@@ -23,8 +25,10 @@ class Tunnel:
         self.isconnected = True
         
     def send(self,message):
-        self.ui.lineEdit.clear()
-        sio.emit('chat_message', message)
+        if message.strip():
+            blurred_message = self.profanityfilter.censor(message)
+            self.ui.lineEdit.clear()
+            sio.emit('chat_message', blurred_message)
     
     def sendUi(self,message):
         self.send(message)
