@@ -45,7 +45,14 @@ class Ui_Chatroom(object):
         verticalLayout.addItem(spacerItem)
         self.usernameLine = QtWidgets.QLineEdit(self.loginWindow)
         self.usernameLine.setObjectName("lineEdit")
+        self.usernameLine.setPlaceholderText("Username")
         verticalLayout.addWidget(self.usernameLine)
+        
+        self.ipLine= QtWidgets.QLineEdit(self.loginWindow)
+        self.ipLine.setObjectName("lineEdit")
+        self.ipLine.setPlaceholderText("IP Address. Defualt localhost")
+        verticalLayout.addWidget(self.ipLine)
+        
         
         horizontalLayout_2 = QtWidgets.QHBoxLayout()
         horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -78,12 +85,20 @@ class Ui_Chatroom(object):
             self.usernameLine.setPlaceholderText("Please enter at least 6 characters")
             return
 
-        self.tunnel.startConnect(self.username)
-        self.chatWindow = QtWidgets.QWidget()  # Create the chat window
-        self.chatUi() 
-        self.sendButton.clicked.connect(lambda: self.tunnel.send(self.lineEdit.text()))  # Connect sendButton to send function
-        self.chatWindow.show()
-        self.loginWindow.hide() 
+        if len(self.ipLine.text()) > 4:
+            self.tunnel.ip = self.ipLine.text()
+        else:
+            self.tunnel.ip = self.tunnel.ipDefualt
+        
+        res = self.tunnel.startConnect(self.username)
+        
+        if res == True:
+            self.chatWindow = QtWidgets.QWidget()  # Create the chat window
+            self.chatUi() 
+            self.sendButton.clicked.connect(lambda: self.tunnel.send(self.lineEdit.text()))  # Connect sendButton to send function
+            self.chatWindow.show()
+            self.loginWindow.hide() 
+    
     
     def randomizer(self):
         random_color = random.choice(self.colors)

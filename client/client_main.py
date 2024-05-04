@@ -3,6 +3,7 @@ import socketio
 from client_ui import Ui_Chatroom
 import sys
 from profanityfilter import ProfanityFilter
+import words
 
 sio = socketio.Client(False)  
 
@@ -11,18 +12,26 @@ class Tunnel:
     def __init__(self):
         self.isconnected = False
         self.ui=None
-        self.profanityfilter = ProfanityFilter()
+        self.profanityfilter = ProfanityFilter(custom_censor_list=words.wordList)
+
+        self.ipDefualt = "http://127.0.0.1:8000/"
+        self.ip = self.ipDefualt
     
-    def startConnect(self,username):
+    def startConnect(self,username) -> bool|None:
         if self.isconnected:
             return
-            
+                   
         try:
-            sio.connect('http://127.0.0.1:8000/',{"username":username})
+            # sio.connect('http://127.0.0.1:8000/',{"username":username})
+            # sio.connect('https://6c69fb5f-a46e-4bd8-a6fd-c902edf06581-00-osx6wzn9hovn.worf.replit.dev/',{"username":username})
+            sio.connect(self.ip,{"username":username})
+            self.isconnected = True
+            return True
+            
         except:
             print("Connection Error")
-            return
-        self.isconnected = True
+            self.isconnected = False
+            return False
         
     def send(self,message):
         if message.strip():
