@@ -3,7 +3,7 @@ import socketio
 from client_ui import Ui_Chatroom
 import sys
 
-sio = socketio.Client()  
+sio = socketio.Client(False)  
 
 class Tunnel:
     global sio
@@ -29,27 +29,40 @@ class Tunnel:
     def sendUi(self,message):
         self.send(message)
         
-    def disconnect(self):
-        sio.disconnect()
- 
+
     @staticmethod
     def on_connect(instance):
         print('Connected to the server!')
 
     @staticmethod
     def on_disconnect(instance):
+        instance.ui.chatWindow.close()
+        instance.ui.loginWindow.show()
+        
         instance.isconnected = False
+        sio.disconnect()
         print('Disconnected from the server.')
+        
 
     @staticmethod
     def on_chat_message(instance,data):
         instance.ui.receive(data)
         
     @staticmethod
-    def on_getChat_history(instance):
-        data = instance.ui.textBrowser.toHtml()
-        # print(data)
-        sio.emit('chat_history',data)
+    def on_giveChat_history(instance):
+        data = instance.ui.getHtml()
+        # instance.emithistory(data)
+        try:
+            sio.emit('chat_history',data = data)
+        except:
+            print("sadge")
+       
+    
+    @staticmethod
+    def get_history(instance,data):
+        print("received history")
+        instance.ui.chat_receive(data)
+
 
 if __name__ == "__main__": 
     app = QtWidgets.QApplication(sys.argv)
@@ -62,7 +75,8 @@ if __name__ == "__main__":
     sio.on('connect', lambda: Tunnel.on_connect(tunnel))
     sio.on('disconnect', lambda: Tunnel.on_disconnect(tunnel))
     sio.on('chat_message', lambda data: Tunnel.on_chat_message(tunnel,data))
-    sio.on('getChat_history', lambda: Tunnel.on_getChat_history(tunnel))
+    sio.on('getChat_history', lambda: Tunnel.on_giveChat_history(tunnel))
+    sio.on('recchat_history', lambda data: Tunnel.get_history(tunnel,data))
 
     ui.loginUI(win)
     win.show()

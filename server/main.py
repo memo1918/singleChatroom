@@ -29,10 +29,9 @@ async def root():
 async def connect(sid, env):
     print("Client Connected: "+ str(sid))
     users[sid] = User(env['HTTP_USERNAME'],str(sid))
-    if len(users) > 1:
-        await sio.emit('getChat_history', to=str(next(iter(users)))) #str(next(iter(users))) -> sid
+    # if len(users) > 1:
+    #     await sio.emit('getChat_history', to=str(next(iter(users)))) #send request to get the chat history
         # sio.on('chat_history', lambda data: chat_history(sid,data))
-    
     
 @sio.on("disconnect")
 async def disconnect(sid):
@@ -47,9 +46,10 @@ async def chat_message(sid, data):
 
     await sio.emit('chat_message', [users[sid].username, data, users[sid].color,current_time] ) 
     
-@sio.on("chat_history")
-def chat_history(sid,data):
-    sio.emit('getChat_history',data,to=sid)
+@sio.on("chat_history") #give the history that received
+async def chat_history(sid,data):
+    # print((next(reversed(users))))
+    await sio.emit('recchat_history',data, to = (next(reversed(users))))
 
     
     

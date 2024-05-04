@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import QMetaObject, Qt
 import sys
 import random
 from datetime import datetime
@@ -149,7 +150,7 @@ class Ui_Chatroom(object):
     def disconnect(self):
         self.chatWindow.close()
         self.loginWindow.show()
-        self.tunnel.disconnect()
+        self.tunnel.on_disconnect(self.tunnel)
         
     def receive(self, data):
         # c = datetime.now()
@@ -159,11 +160,14 @@ class Ui_Chatroom(object):
         # self.textBrowser.moveCursor(QtGui.QTextCursor.End)
         # print(self.textBrowser.setHtml)
         
-    def chat_receive(self,data):
-        self.textBrowser.setHtml(data)
+    def chat_receive(self,data) -> None:
+        # self.textBrowser.clear()
+        # self.textBrowser.setHtml(data)
+        QMetaObject.invokeMethod(self.textBrowser, "setHtml", Qt.QueuedConnection, QtCore.Q_ARG(str, data))
         
-    
-    
+    def getHtml(self) -> str:
+        return self.textBrowser.toHtml()
+
        
 # app = QtWidgets.QApplication(sys.argv)
 # win = QtWidgets.QWidget()
