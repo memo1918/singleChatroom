@@ -157,8 +157,12 @@ class Ui_Chatroom(object):
         # c = datetime.now()
         # current_time = c.strftime('%H:%M:%S')
         stamp = f"{data[3]}:{data[0]}:"
-        self.textBrowser.append(f"<p style='color:{data[2]}'>{stamp} <span style='color:black'> {data[1]} </span> </p>")
+        self.textBrowser.append(f"<p style='color:{data[2]}'>{stamp} <span class:'text' style='color:black'> {data[1]} </span> </p>")
         # self.textBrowser.moveCursor(QtGui.QTextCursor.End)
+        # print(self.textBrowser.setHtml)
+        
+    def chat_receive(self,data):
+        self.textBrowser.setHtml(data)
         
     
     
