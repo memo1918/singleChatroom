@@ -12,4 +12,3 @@ Run the exe from latest relase.
 Install dependencies and run client_main.py located in client folder.
 
 
-(https://6c69fb5f-a46e-4bd8-a6fd-c902edf06581-00-osx6wzn9hovn.worf.replit.dev/)
